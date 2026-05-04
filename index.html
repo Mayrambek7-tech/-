@@ -12,7 +12,7 @@
             background-color: #000; 
             color: #ff1493;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow-x: hidden;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -22,89 +22,109 @@
             position: fixed;
             top: 0; left: 0;
             z-index: 1;
-            opacity: 0.4;
-            display: none;
+            opacity: 0.3;
         }
 
         .content {
             position: relative;
             z-index: 10;
-            text-align: center;
-            width: 90%;
-            max-width: 800px;
-            padding: 20px;
+            width: 95%;
+            max-width: 700px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
+        /* КРАСИВАЯ КНОПКА С АНИМАЦИЕЙ */
         #start-btn {
-            padding: 20px 50px;
-            font-size: 1.5rem;
+            padding: 22px 45px;
+            font-size: 1.3rem;
             background: transparent;
-            color: #ff1493;
+            color: #fff;
             border: 2px solid #ff1493;
             border-radius: 50px;
             cursor: pointer;
+            z-index: 20;
             transition: 0.4s;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            box-shadow: 0 0 15px rgba(255, 20, 147, 0.4);
+            letter-spacing: 2px;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.5);
+            animation: pulse 2s infinite; /* Эффект пульсации */
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 20, 147, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(255, 20, 147, 0.8); }
+            100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 20, 147, 0.5); }
         }
 
         #start-btn:hover {
             background: #ff1493;
             color: #fff;
-            box-shadow: 0 0 50px #ff1493;
+            box-shadow: 0 0 60px #ff1493;
+            animation: none;
         }
 
         #countdown {
-            font-size: 12rem;
+            font-size: 10rem;
             font-weight: 900;
             display: none;
             text-shadow: 0 0 30px #ff1493;
         }
 
-        #main-title {
-            font-size: clamp(2rem, 7vw, 4.5rem);
+        .wish-scroll-area {
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
             display: none;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            margin-bottom: 30px;
+            padding: 20px 0;
+            scrollbar-width: none;
+        }
+
+        .wish-scroll-area::-webkit-scrollbar { display: none; }
+
+        .text-center-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 100px;
+        }
+
+        #main-title {
+            font-size: clamp(1.8rem, 8vw, 3.5rem);
             color: #fff;
             text-shadow: 0 0 20px #ff1493;
+            margin-bottom: 50px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 1.2s ease;
         }
-
-        .wish-container {
-            max-height: 70vh;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-
-        /* Кастомный скроллбар */
-        .wish-container::-webkit-scrollbar { width: 5px; }
-        .wish-container::-webkit-scrollbar-thumb { background: #ff1493; border-radius: 10px; }
 
         .wish-line {
-            font-size: clamp(1.1rem, 3.5vw, 1.6rem);
+            font-size: clamp(1.1rem, 4vw, 1.6rem);
             margin: 15px 0;
             opacity: 0;
-            transform: translateY(30px);
-            transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: translateY(20px);
+            transition: all 0.8s ease;
             color: #f0f0f0;
-            line-height: 1.5;
+            text-align: center;
+            line-height: 1.6;
+            width: 90%;
         }
 
-        .wish-line.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .show { opacity: 1 !important; transform: translateY(0) !important; }
 
-        .highlight { color: #ff1493; font-weight: bold; text-shadow: 0 0 10px rgba(255, 20, 147, 0.5); }
+        .highlight { color: #ff1493; font-weight: bold; text-shadow: 0 0 5px #ff1493; }
         
         .footer-note {
-            margin-top: 40px;
+            margin-top: 50px;
+            font-size: 2rem !important;
             font-weight: bold;
-            letter-spacing: 2px;
             color: #ff1493 !important;
-            font-size: 1.8rem !important;
         }
     </style>
 </head>
@@ -113,30 +133,29 @@
     <canvas id="matrix"></canvas>
 
     <div class="content">
-        <button id="start-btn">Нажми, Сайкал 🎀</button>
+        <!-- ТЕКСТ КНОПКИ ИЗМЕНЕН ЗДЕСЬ -->
+        <button id="start-btn">Открыть поздравление 🎁</button>
         <div id="countdown">3</div>
         
-        <div id="main-ui" style="display: none;">
-            <h1 id="main-title">С Твоим Днем, Сайкал! ✨</h1>
-            <div id="wishes" class="wish-container">
+        <div id="wish-area" class="wish-scroll-area">
+            <div class="text-center-wrapper">
+                <h1 id="main-title">С Твоим Днем, Сайкал! ✨</h1>
+                
                 <div class="wish-line">Сегодня мир празднует то, что в нем есть <span class="highlight">ТЫ</span>.</div>
-                <div class="wish-line">Ты - удивительное сочетание хрупкой нежности и невероятной силы духа.</div>
-                <div class="wish-line">Пусть твоя жизнь будет яркой коллекцией моментов, от которых захватывает дух.</div>
+                <div class="wish-line">Ты - удивительное сочетание нежности и силы.</div>
                 
                 <div class="wish-line" style="margin: 30px 0; opacity: 0.5;">—— ✨ ——</div>
                 
-                <div class="wish-line">Ты делаешь этот мир особенным просто тем, что ты в нем есть.</div>
                 <div class="wish-line">Достатка тебе - как у самого успешного <span class="highlight">банкира</span> 💰</div>
                 <div class="wish-line">Путешествий - как у топового <span class="highlight">блогера</span> 🌴</div>
-                <div class="wish-line">Проблем - как у ленивого домашнего <span class="highlight">кота</span> 🐾</div>
+                <div class="wish-line">Проблем - как у ленивого <span class="highlight">кота</span> 🐾</div>
                 <div class="wish-line">Энергии - как у могучего <span class="highlight">быка</span> 💪</div>
-                <div class="wish-line">Везения - как у главного <span class="highlight">любимчика судьбы</span> ✨</div>
                 
                 <div class="wish-line" style="margin: 30px 0; opacity: 0.5;">—— ✨ ——</div>
 
-                <div class="wish-line">Пусть твои глаза всегда светятся счастьем, а мечты сбываются быстрее, чем ты успеваешь их загадывать.</div>
-                <div class="wish-line">И самое важное: счастья тебе — <span class="highlight">в степени Infinity</span> ♾️</div>
-                <div class="wish-line footer-note">БУДЬ БЕСКОНЕЧНО СЧАСТЛИВА! 🤍</div>
+                <div class="wish-line">Пусть твои глаза всегда светятся счастьем.</div>
+                <div class="wish-line">И самое важное: счастья тебе - <span class="highlight">Infinity</span> ♾️</div>
+                <div class="wish-line footer-note">БУДЬ СЧАСТЛИВА! 🤍</div>
             </div>
         </div>
     </div>
@@ -144,15 +163,14 @@
     <script>
         const startBtn = document.getElementById('start-btn');
         const countdownEl = document.getElementById('countdown');
-        const mainUi = document.getElementById('main-ui');
-        const titleEl = document.getElementById('main-title');
+        const wishArea = document.getElementById('wish-area');
+        const mainTitle = document.getElementById('main-title');
         const canvas = document.getElementById('matrix');
         const ctx = canvas.getContext('2d');
 
         startBtn.onclick = function() {
             startBtn.style.display = 'none';
             countdownEl.style.display = 'block';
-            
             let count = 3;
             const timer = setInterval(() => {
                 count--;
@@ -166,63 +184,35 @@
             }, 1000);
         };
 
-        function firework() {
-            var duration = 15 * 1000;
-            var animationEnd = Date.now() + duration;
-            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
-
-            var interval = setInterval(function() {
-                var timeLeft = animationEnd - Date.now();
-                if (timeLeft <= 0) return clearInterval(interval);
-
-                var particleCount = 50 * (timeLeft / duration);
-                confetti(Object.assign({}, defaults, { 
-                    particleCount, 
-                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-                    colors: ['#ff1493', '#ffffff', '#ff69b4']
-                }));
-                confetti(Object.assign({}, defaults, { 
-                    particleCount, 
-                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-                    colors: ['#ff1493', '#ffffff', '#ff69b4']
-                }));
-            }, 250);
-        }
-
         function runShow() {
-            canvas.style.display = 'block';
-            mainUi.style.display = 'block';
-            titleEl.style.display = 'block';
+            wishArea.style.display = 'block';
+            initMatrix();
+            setInterval(drawMatrix, 50);
             
             confetti({
-                particleCount: 200,
-                spread: 100,
+                particleCount: 150,
+                spread: 70,
                 origin: { y: 0.6 },
                 colors: ['#ff1493', '#ffffff']
             });
 
-            firework();
-            initMatrix();
-            setInterval(drawMatrix, 50);
+            setTimeout(() => mainTitle.classList.add('show'), 500);
 
             const lines = document.querySelectorAll('.wish-line');
             lines.forEach((line, i) => {
                 setTimeout(() => {
                     line.classList.add('show');
-                    // Автоматический скролл вниз при появлении новых строк
-                    document.querySelector('.wish-container').scrollTo({
-                        top: line.offsetTop,
+                    wishArea.scrollTo({
+                        top: line.offsetTop - 150,
                         behavior: 'smooth'
                     });
-                }, (i + 1) * 1200);
+                }, (i + 1) * 1500 + 1000);
             });
         }
 
-        // ПАДАЮЩИЙ ТЕКСТ (МАТРИЦА)
+        // МАТРИЦА: Только "HAPPY BIRTHDAY"
         let drops = [];
-        const words = ["SAYKAL", "HAPPY BIRTHDAY", "С ДНЕМ РОЖДЕНИЯ", "LOVE", "HAPPY", "✨", "❤️"];
+        const charString = "HAPPYBIRTHDAY"; 
         const fontSize = 16;
 
         function initMatrix() {
@@ -235,26 +225,17 @@
         function drawMatrix() {
             ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
             ctx.font = fontSize + "px monospace";
-            
             for (let i = 0; i < drops.length; i++) {
-                // Случайный выбор слова или буквы
-                const word = words[Math.floor(Math.random() * words.length)];
-                const char = word[Math.floor(Math.random() * word.length)];
-                
-                // Цвет текста (чередуем розовый и белый)
-                ctx.fillStyle = Math.random() > 0.5 ? "#ff1493" : "#ff69b4";
-                
+                const char = charString[Math.floor(Math.random() * charString.length)];
+                ctx.fillStyle = "#ff1493"; 
                 ctx.fillText(char, i * fontSize, drops[i] * fontSize);
-                
                 if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
                     drops[i] = 0;
                 }
                 drops[i]++;
             }
         }
-
         window.onresize = initMatrix;
     </script>
 </body>
